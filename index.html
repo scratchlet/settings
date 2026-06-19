@@ -245,7 +245,7 @@
         @media (min-width: 850px) {
             .settings-grid {
                 grid-template-columns: 1.1fr 0.9fr;
-                align-items: start;
+                align-items: stretch; /* Stretches columns evenly */
             }
         }
 
@@ -254,6 +254,16 @@
             border: 2px solid rgba(255, 255, 255, 0.1);
             border-radius: 20px;
             padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Account profile inner container to distribute content vertically */
+        .account-profile-box {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            justify-content: space-between;
         }
 
         /* Right column structural layout stack */
@@ -261,6 +271,11 @@
             display: flex;
             flex-direction: column;
             gap: 25px;
+            height: 100%;
+        }
+
+        .right-column-stack .settings-section {
+            flex: 1;
         }
 
         .section-title {
@@ -278,7 +293,8 @@
             display: grid;
             grid-template-columns: 1fr;
             gap: 15px;
-            margin-bottom: 15px;
+            margin-bottom: 25px; /* Added margin for stretching separation */
+            flex-grow: 1;
         }
 
         @media (min-width: 550px) {
@@ -290,7 +306,7 @@
         .input-group {
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 8px;
         }
 
         .input-group label {
@@ -299,11 +315,12 @@
             color: rgba(255, 255, 255, 0.8);
         }
 
+        /* Expanded vertical spacing for fields */
         .settings-input {
             background: rgba(0, 0, 0, 0.2);
             border: 2px solid rgba(255, 255, 255, 0.2);
             border-radius: 14px;
-            padding: 12px 16px;
+            padding: 16px 18px; /* Increased padding for vertical stretch */
             font-family: "Nunito", sans-serif;
             font-weight: 700;
             color: white;
@@ -317,11 +334,19 @@
             border-color: rgba(255, 255, 255, 0.6);
         }
 
+        /* Vertically aligned save button */
+        #saveProfileBtn {
+            align-self: flex-start;
+            padding: 14px 32px; /* Balanced larger action box appearance */
+            font-size: 0.95rem;
+        }
+
         /* DISCORD & CREDITS BUTTON COMPONENT GRID */
         .social-buttons {
             display: flex;
             flex-wrap: wrap;
             gap: 15px;
+            margin-top: auto;
         }
 
         .discord-btn {
@@ -614,25 +639,31 @@
         
         <div class="settings-grid">
             <div class="settings-section">
-                <div class="section-title"><span class="material-icons">manage_accounts</span> Account Profiles</div>
-                
-                <div class="profile-inputs-row">
-                    <div class="input-group">
-                        <label for="usernameInput">Username</label>
-                        <input type="text" id="usernameInput" class="settings-input" placeholder="Type Username">
+                <div class="account-profile-box">
+                    <div>
+                        <div class="section-title"><span class="material-icons">manage_accounts</span> Account Profiles</div>
+                        
+                        <div class="profile-inputs-row">
+                            <div class="input-group">
+                                <label for="usernameInput">Username</label>
+                                <input type="text" id="usernameInput" class="settings-input" placeholder="Type Username">
+                            </div>
+                            <div class="input-group">
+                                <label for="emailInput">Email Address</label>
+                                <input type="email" id="emailInput" class="settings-input" placeholder="Type Email Address">
+                            </div>
+                            <div class="input-group">
+                                <label for="passwordInput">New Password</label>
+                                <input type="password" id="passwordInput" class="settings-input" placeholder="Type Password">
+                            </div>
+                        </div>
                     </div>
-                    <div class="input-group">
-                        <label for="emailInput">Email Address</label>
-                        <input type="email" id="emailInput" class="settings-input" placeholder="Type Email Address">
-                    </div>
-                    <div class="input-group">
-                        <label for="passwordInput">New Password</label>
-                        <input type="password" id="passwordInput" class="settings-input" placeholder="Type Password">
+
+                    <div>
+                        <button class="btn primary" id="saveProfileBtn">Save</button>
+                        <div id="profileStatus" class="status-msg" style="color: #fff4d6;"></div>
                     </div>
                 </div>
-
-                <button class="btn primary" id="saveProfileBtn">Save</button>
-                <div id="profileStatus" class="status-msg" style="color: #fff4d6;"></div>
             </div>
 
             <div class="right-column-stack">
@@ -651,7 +682,7 @@
                     </div>
                 </div>
 
-                <div class="settings-section" style="border-color: rgba(214, 36, 36, 0.4);">
+                <div class="settings-section" style="border-color: rgba(214, 36, 36, 0.4); margin-top: auto;">
                     <div class="section-title" style="color: #ff6b6b;"><span class="material-icons">gavel</span> Reset Account Data </div>
                     <p style="margin-bottom: 15px; font-weight: 600; opacity: 0.9;">Resetting your data is permanent and will reset everything in your account.</p>
                     <button class="btn danger" id="resetStorageBtn">Reset</button>
