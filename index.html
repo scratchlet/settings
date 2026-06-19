@@ -571,9 +571,9 @@
             display: none;
         }
 
-        /* ================= UNIQUE STAFF TITLE TEXT ANIMATIONS ================= */
+   
 
-        /* OWNER - Rainbow Dynamic Moving Text Gradient */
+    
         .staff-owner .credit-name, .staff-owner .credit-role {
             background: linear-gradient(45deg, #ff4e50, #f9d423, #4facfe, #00f2fe, #b19ffb, #ff4e50);
             background-size: 300% auto;
@@ -583,7 +583,7 @@
         }
         .staff-owner .credit-role { font-weight: 900; border: 1px solid rgba(249, 212, 35, 0.4); }
 
-        /* CO-OWNER - Shining Metallic Silver Text */
+
         .staff-co-owner .credit-name, .staff-co-owner .credit-role {
             background: linear-gradient(70deg, #b0b0b0 20%, #ffffff 50%, #b0b0b0 80%);
             background-size: 200% auto;
@@ -593,42 +593,42 @@
         }
         .staff-co-owner .credit-role { font-weight: 900; border: 1px solid rgba(255,255,255,0.3); }
 
-        /* ARTIST - Glowing Tan Text */
+
         .staff-artist .credit-name, .staff-artist .credit-role {
             color: #ffe4c4;
             animation: textGlowTan 2s ease-in-out infinite alternate;
         }
         .staff-artist .credit-role { background: rgba(210, 180, 140, 0.2); border: 1px solid #d2b48c; }
 
-        /* DEVELOPER - Glowing Purple Cosmic Text */
+
         .staff-developer .credit-name, .staff-developer .credit-role {
             color: #e040fb;
             animation: textGlowPurple 2s ease-in-out infinite alternate;
         }
         .staff-developer .credit-role { background: rgba(170, 0, 255, 0.2); border: 1px solid #aa00ff; }
 
-        /* TESTER - Glowing Teal Matrix Text */
+
         .staff-tester .credit-name, .staff-tester .credit-role {
             color: #1de9b6;
             animation: textGlowTeal 2s ease-in-out infinite alternate;
         }
         .staff-tester .credit-role { background: rgba(0, 191, 165, 0.2); border: 1px solid #00bfa5; }
 
-        /* ADMIN - Glowing Red Alarm Text */
+
         .staff-admin .credit-name, .staff-admin .credit-role {
             color: #ff1744;
             animation: textGlowRed 1.5s ease-in-out infinite alternate;
         }
         .staff-admin .credit-role { background: rgba(213, 0, 0, 0.2); border: 1px solid #d50000; }
 
-        /* OG - Glowing Vintage Orange Text */
+
         .staff-og .credit-name, .staff-og .credit-role {
             color: #ff9100;
             animation: textGlowOrange 2s ease-in-out infinite alternate;
         }
         .staff-og .credit-role { background: rgba(255, 109, 0, 0.2); border: 1px solid #ff6d00; }
 
-        /* TEXT ANIMATION KEYFRAMES */
+
         @keyframes textRainbowShift {
             0% { background-position: 0% 50%; }
             100% { background-position: 300% 50%; }
@@ -912,10 +912,10 @@
 </div>
 
 <script type="module">
-    /* ================= FIREBASE INITIALIZATION ================= */
+
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut, updateEmail, updatePassword } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, setDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
     const firebaseConfig = {  
         apiKey: "AIzaSyBzyszqkVPOn_Zbs0eacE1KQccYsTxul1E",  
@@ -931,13 +931,11 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    /* ================= GAME STATES ================= */
+
     let coins = 0;
     let ownedBlocks = []; 
     let currentUser = null;
-    let customBlookData = {}; // Stores schema mappings for any custom uploaded blooks
-
-    // MASTER LOCAL ADMIN AUTHORIZATION RUNTIMES
+    let customBlookData = {}; 
     let administrators = ["SuperMemes_64"];
 
     onAuthStateChanged(auth, async (user) => {  
@@ -958,18 +956,18 @@
         }
     };
 
-    /* ================= LOAD & UPDATE SYSTEMS ================= */
+
     async function loadUserData() {    
         if (!currentUser) return;    
         try {        
             const userDocRef = doc(db, "users", currentUser.uid);        
-            const userSnapshot = await getDoc(userDocRef);                
+            const userSnapshot = await getDoc(userDocRefRef);                
             if (userSnapshot.exists()) {            
                 const data = userSnapshot.data();            
                 coins = data.coins !== undefined ? data.coins : 0;            
                 ownedBlocks = Array.isArray(data.ownedBlocks) ? data.ownedBlocks : [];
                 customBlookData = data.customBlookData || {};
-                
+
                 if (Array.isArray(data.sysAdmins)) {
                     administrators = [...new Set(["SuperMemes_64", ...data.sysAdmins])];
                 }
@@ -978,8 +976,8 @@
                 document.getElementById("usernameInput").value = currentUsername;
                 document.getElementById("emailInput").value = currentUser.email || "";
 
-                // SECURE CHECK AGAINST SYSTEM ADMIN ARRAYS
-                if (administrators.includes(currentUsername)) {
+
+                if (administrators.includes(currentUsername) || data.isAdmin === true) {
                     document.getElementById("adminSection").style.display = "block";
                 } else {
                     document.getElementById("adminSection").style.display = "none";
@@ -1007,7 +1005,7 @@
         }
     }
 
-    /* SAVE ACCOUNT CHANGES */
+
     document.getElementById("saveProfileBtn").onclick = async () => {
         const profileStatus = document.getElementById("profileStatus");
         profileStatus.style.display = "block";
@@ -1039,7 +1037,7 @@
         }
     };
 
-    /* STORAGE RESET CONTROL */
+
     document.getElementById("resetStorageBtn").onclick = async () => {
         const confirmClear = confirm("Are you absolutely sure you want to delete all coins and clear your catalog progress?");
         if (!confirmClear) return;
@@ -1070,14 +1068,14 @@
         }
     };
 
-    /* ================= ADMIN OPERATIONAL SUBROUTINES ================= */
+   
     function setAdminNotice(text) {
         const field = document.getElementById("adminGlobalStatus");
         field.innerText = text;
         setTimeout(() => { field.innerText = ""; }, 4000);
     }
 
-    // 1. ADD COINS INTERFACE ACTION
+
     document.getElementById("adminAddCoinsBtn").onclick = async () => {
         const amount = parseInt(document.getElementById("adminCoinAmount").value);
         if (isNaN(amount)) return setAdminNotice("Invalid currency configuration.");
@@ -1086,7 +1084,7 @@
         setAdminNotice(`Successfully injected 🪙 ${amount} into your runtime wallet.`);
     };
 
-    // 2. ADD STANDARD CATALOG BLOOKS ACTION
+
     document.getElementById("adminAddBlookBtn").onclick = async () => {
         const chosenBlook = document.getElementById("adminBlookSelect").value;
         ownedBlocks.push(chosenBlook);
@@ -1094,7 +1092,7 @@
         setAdminNotice(`Successfully appended blook "${chosenBlook}" to user collections.`);
     };
 
-    // 3. ADD AND UPLOAD COMPLETELY CUSTOM CARDS/BLOOKS ACTION
+
     document.getElementById("adminCreateCustomBtn").onclick = async () => {
         const name = document.getElementById("customBlookName").value.trim();
         const rarity = document.getElementById("customBlookRarity").value;
@@ -1102,7 +1100,7 @@
 
         if (!name || !url) return setAdminNotice("Missing essential fields to map custom parameters.");
 
-        // Record schema parameters internally inside unique user database structures
+
         customBlookData[name] = { name, rarity, image: url };
         ownedBlocks.push(name);
 
@@ -1112,18 +1110,56 @@
         document.getElementById("customBlookUrl").value = "";
     };
 
-    // 4. ADD OTHER USERS BY USERNAME MATCH TO PRIVILEGED ARRAYS
+
     document.getElementById("adminAddUserBtn").onclick = async () => {
         const targetUsername = document.getElementById("newAdminUsername").value.trim();
         if (!targetUsername) return setAdminNotice("Invalid username data input provided.");
         
-        if (!administrators.includes(targetUsername)) {
-            administrators.push(targetUsername);
-            await saveUserData();
+        setAdminNotice("Searching for user account in database...");
+
+        try {
+
+            const usersRef = collection(db, "users");
+            const q = query(usersRef, where("username", "==", targetUsername));
+            const querySnapshot = await getDocs(q);
+
+            if (querySnapshot.empty) {
+                return setAdminNotice(`Error: User "${targetUsername}" not found in master records.`);
+            }
+
+  
+            let updatedCount = 0;
+            querySnapshot.forEach(async (userDoc) => {
+                const targetDocRef = doc(db, "users", userDoc.id);
+                const targetData = userDoc.data();
+                
+
+                let targetSysAdmins = Array.isArray(targetData.sysAdmins) ? targetData.sysAdmins : [];
+                
+                if (!targetSysAdmins.includes(targetUsername)) {
+                    targetSysAdmins.push(targetUsername);
+                }
+
+     
+                await setDoc(targetDocRef, { 
+                    isAdmin: true,
+                    sysAdmins: targetSysAdmins
+                }, { merge: true });
+                
+                updatedCount++;
+            });
+
+   
+            if (!administrators.includes(targetUsername)) {
+                administrators.push(targetUsername);
+                await saveUserData();
+            }
+
             setAdminNotice(`Privileges granted! "${targetUsername}" added to master administrator matrices.`);
             document.getElementById("newAdminUsername").value = "";
-        } else {
-            setAdminNotice("Target user already possesses secondary administrative authority.");
+        } catch (err) {
+            console.error("Failed to assign administrator values:", err);
+            setAdminNotice("Database error occurred while changing permissions.");
         }
     };
 
@@ -1134,7 +1170,7 @@
     document.getElementById("closeCreditsBtn").onclick = () => overlay.classList.remove("open");
     overlay.onclick = (e) => { if(e.target === overlay) overlay.classList.remove("open"); };
 
-    /* FLOATING BACKGROUND SQUARES GENERATOR */
+  
     function createSquares() {
         const bg = document.querySelector(".background");
         if (!bg) return;
