@@ -205,7 +205,7 @@
         
         /* SETTINGS LAYOUT CONTAINER */
         .container {
-            max-width: 95%; /* Stretched width across the screen layout */
+            max-width: 95%;
             margin: auto;
             padding: 25px;
             position: relative;
@@ -235,11 +235,18 @@
             gap: 10px;
         }
 
-        /* SETTINGS GRID SECTION */
+        /* TWO-COLUMN GRID LAYOUT */
         .settings-grid {
             display: grid;
             grid-template-columns: 1fr;
             gap: 25px;
+        }
+
+        @media (min-width: 850px) {
+            .settings-grid {
+                grid-template-columns: 1.1fr 0.9fr;
+                align-items: start;
+            }
         }
 
         .settings-section {
@@ -247,6 +254,13 @@
             border: 2px solid rgba(255, 255, 255, 0.1);
             border-radius: 20px;
             padding: 20px;
+        }
+
+        /* Right column structural layout stack */
+        .right-column-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
         }
 
         .section-title {
@@ -259,9 +273,21 @@
             gap: 8px;
         }
 
-        /* INPUTS */
-        .input-group {
+        /* COMPRESSED PROFILE ROW CONTAINER */
+        .profile-inputs-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
             margin-bottom: 15px;
+        }
+
+        @media (min-width: 550px) {
+            .profile-inputs-row {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .input-group {
             display: flex;
             flex-direction: column;
             gap: 6px;
@@ -305,6 +331,8 @@
             border-radius: 14px;
             font-weight: 900;
             box-shadow: 0 6px 0 #3c45a6;
+            flex: 1;
+            min-width: 200px;
         }
 
         .credits-trigger-btn {
@@ -314,6 +342,8 @@
             border-radius: 14px;
             font-weight: 900;
             box-shadow: 0 6px 0 #b3630d;
+            flex: 1;
+            min-width: 140px;
         }
 
         /* MODAL SCREEN WORKSPACE FOR CREDITS */
@@ -340,7 +370,7 @@
         .credits-modal-card {
             background: rgba(0, 0, 0, 0.45);
             border: 3px solid rgba(255, 255, 255, 0.2);
-            max-width: 95%; /* Stretched width across the screen layout */
+            max-width: 95%;
             width: 100%;
             max-height: 85vh;
             border-radius: 28px;
@@ -585,42 +615,48 @@
         <div class="settings-grid">
             <div class="settings-section">
                 <div class="section-title"><span class="material-icons">manage_accounts</span> Account Profiles</div>
-                <div class="input-group">
-                    <label for="usernameInput">Username</label>
-                    <input type="text" id="usernameInput" class="settings-input" placeholder="Type Username">
+                
+                <div class="profile-inputs-row">
+                    <div class="input-group">
+                        <label for="usernameInput">Username</label>
+                        <input type="text" id="usernameInput" class="settings-input" placeholder="Type Username">
+                    </div>
+                    <div class="input-group">
+                        <label for="emailInput">Email Address</label>
+                        <input type="email" id="emailInput" class="settings-input" placeholder="Type Email Address">
+                    </div>
+                    <div class="input-group">
+                        <label for="passwordInput">New Password</label>
+                        <input type="password" id="passwordInput" class="settings-input" placeholder="Type Password">
+                    </div>
                 </div>
-                <div class="input-group">
-                    <label for="emailInput">Email Address</label>
-                    <input type="email" id="emailInput" class="settings-input" placeholder="Type Email Address">
-                </div>
-                <div class="input-group">
-                    <label for="passwordInput">New Password</label>
-                    <input type="password" id="passwordInput" class="settings-input" placeholder="Type Password">
-                </div>
+
                 <button class="btn primary" id="saveProfileBtn">Save</button>
                 <div id="profileStatus" class="status-msg" style="color: #fff4d6;"></div>
             </div>
 
-            <div class="settings-section">
-                <div class="section-title"><span class="material-icons">link</span> Community Integrations</div>
-                <p style="margin-bottom: 15px; font-weight: 600; opacity: 0.9;">Join our communities to engage with developments or inspect our specialized production team matrices.</p>
-                
-                <div class="social-buttons">
-                    <a href="https://discord.gg/xKvC4ufrzj" target="_blank" class="btn discord-btn" id="discordLinkBtn">
-                        <span class="material-icons" style="margin-right: 6px;">groups</span> Join Our Discord Server
-                    </a>
+            <div class="right-column-stack">
+                <div class="settings-section">
+                    <div class="section-title"><span class="material-icons">link</span> Community Integrations</div>
+                    <p style="margin-bottom: 15px; font-weight: 600; opacity: 0.9;">Join our communities to engage with developments or inspect our specialized production team matrices.</p>
                     
-                    <button class="btn credits-trigger-btn" id="openCreditsBtn">
-                        <span class="material-icons" style="margin-right: 6px;">star</span> Show Credits
-                    </button>
+                    <div class="social-buttons">
+                        <a href="https://discord.gg/xKvC4ufrzj" target="_blank" class="btn discord-btn" id="discordLinkBtn">
+                            <span class="material-icons" style="margin-right: 6px;">groups</span> Join Our Discord Server
+                        </a>
+                        
+                        <button class="btn credits-trigger-btn" id="openCreditsBtn">
+                            <span class="material-icons" style="margin-right: 6px;">star</span> Show Credits
+                        </button>
+                    </div>
                 </div>
-            </div>
 
-            <div class="settings-section" style="border-color: rgba(214, 36, 36, 0.4);">
-                <div class="section-title" style="color: #ff6b6b;"><span class="material-icons">gavel</span> Reset Account Data </div>
-                <p style="margin-bottom: 15px; font-weight: 600; opacity: 0.9;">Resetting your data is permanent and will reset everything in your account.</p>
-                <button class="btn danger" id="resetStorageBtn">Reset</button>
-                <div id="resetStatus" class="status-msg" style="color: #ff6b6b;"></div>
+                <div class="settings-section" style="border-color: rgba(214, 36, 36, 0.4);">
+                    <div class="section-title" style="color: #ff6b6b;"><span class="material-icons">gavel</span> Reset Account Data </div>
+                    <p style="margin-bottom: 15px; font-weight: 600; opacity: 0.9;">Resetting your data is permanent and will reset everything in your account.</p>
+                    <button class="btn danger" id="resetStorageBtn">Reset</button>
+                    <div id="resetStatus" class="status-msg" style="color: #ff6b6b;"></div>
+                </div>
             </div>
 
         </div>
