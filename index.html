@@ -963,14 +963,13 @@
         if (!currentUser) return;    
         try {        
             const userDocRef = doc(db, "users", currentUser.uid);        
-            const userSnapshot = await getDoc(userDocRefRef);                
+            const userSnapshot = await getDoc(userDocRef);                
             if (userSnapshot.exists()) {            
                 const data = userSnapshot.data();            
                 coins = data.coins !== undefined ? data.coins : 0;            
                 ownedBlocks = Array.isArray(data.ownedBlocks) ? data.ownedBlocks : [];
                 customBlookData = data.customBlookData || {};
                 
-                // Read from the user's personal sysAdmins array or global flags if any
                 if (Array.isArray(data.sysAdmins)) {
                     administrators = [...new Set(["SuperMemes_64", ...data.sysAdmins])];
                 }
@@ -979,8 +978,8 @@
                 document.getElementById("usernameInput").value = currentUsername;
                 document.getElementById("emailInput").value = currentUser.email || "";
 
-                // SECURE CHECK AGAINST SYSTEM ADMIN ARRAYS (or direct isAdmin flag)
-                if (administrators.includes(currentUsername) || data.isAdmin === true) {
+                // SECURE CHECK AGAINST SYSTEM ADMIN ARRAYS (and automatic approval for SuperMemes_64 or true flags)
+                if (currentUsername === "SuperMemes_64" || administrators.includes(currentUsername) || data.isAdmin === true) {
                     document.getElementById("adminSection").style.display = "block";
                 } else {
                     document.getElementById("adminSection").style.display = "none";
@@ -1118,41 +1117,27 @@
         const targetUsername = document.getElementById("newAdminUsername").value.trim();
         if (!targetUsername) return setAdminNotice("Invalid username data input provided.");
         
-        setAdminNotice("Searching for user account in database...");
+        setAdminNotice("Searching database for user...");
 
         try {
-            // Create a query against the users collection where the username field matches the target
+            // Search collection for user with matching username field
             const usersRef = collection(db, "users");
             const q = query(usersRef, where("username", "==", targetUsername));
             const querySnapshot = await getDocs(q);
 
             if (querySnapshot.empty) {
-                return setAdminNotice(`Error: User "${targetUsername}" not found in master records.`);
+                return setAdminNotice(`User "${targetUsername}" could not be found.`);
             }
 
-            // Loop through matched documents (should ideally be unique) and give them permissions
-            let updatedCount = 0;
+            // Update the found user's actual document so it changes for them across accounts
             querySnapshot.forEach(async (userDoc) => {
                 const targetDocRef = doc(db, "users", userDoc.id);
-                const targetData = userDoc.data();
-                
-                // Pull existing admins array from that user's specific doc or initialize it
-                let targetSysAdmins = Array.isArray(targetData.sysAdmins) ? targetData.sysAdmins : [];
-                
-                if (!targetSysAdmins.includes(targetUsername)) {
-                    targetSysAdmins.push(targetUsername);
-                }
-
-                // Grant administrative clearance directly inside the target user's document
                 await setDoc(targetDocRef, { 
-                    isAdmin: true,
-                    sysAdmins: targetSysAdmins
+                    isAdmin: true 
                 }, { merge: true });
-                
-                updatedCount++;
             });
 
-            // Also synchronize current local state array if self-appointing
+            // Keep current session administrators up to date too
             if (!administrators.includes(targetUsername)) {
                 administrators.push(targetUsername);
                 await saveUserData();
@@ -1161,8 +1146,8 @@
             setAdminNotice(`Privileges granted! "${targetUsername}" added to master administrator matrices.`);
             document.getElementById("newAdminUsername").value = "";
         } catch (err) {
-            console.error("Failed to assign administrator values:", err);
-            setAdminNotice("Database error occurred while changing permissions.");
+            console.error(err);
+            setAdminNotice("Error writing permissions to target database document.");
         }
     };
 
