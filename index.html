@@ -353,6 +353,24 @@
             transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
+        /* MATCHED STYLE SCROLLBAR FOR THE CREDITS CARD */
+        .credits-modal-card::-webkit-scrollbar {
+            width: 10px;
+        }
+        .credits-modal-card::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+        .credits-modal-card::-webkit-scrollbar-thumb {
+            background: #ff9b2f;
+            border-radius: 10px;
+            box-shadow: inset 0 -2px rgba(0, 0, 0, 0.2);
+        }
+        .credits-modal-card::-webkit-scrollbar-thumb:hover {
+            background: #ff7f11;
+        }
+
         .modal-overlay.open .credits-modal-card {
             transform: scale(1);
         }
@@ -372,6 +390,7 @@
             align-items: center;
             justify-content: center;
             transition: background 0.2s;
+            z-index: 10;
         }
         .close-modal-btn:hover { background: rgba(255,255,255,0.15); }
 
@@ -397,11 +416,12 @@
             background: rgba(255, 255, 255, 0.14);
         }
 
+        /* SQUARE IMAGE FRAMES TO PREVENT FULL AVATAR CLIPPING */
         .credit-img-frame {
             width: 85px;
             height: 85px;
             background: rgba(255,255,255,0.15);
-            border-radius: 50%;
+            border-radius: 16px;
             margin: 0 auto 14px auto;
             display: flex;
             align-items: center;
@@ -623,7 +643,7 @@
                 </div>
                 <div class="credit-name">Scratchlet</div>
                 <div class="credit-role">Owner</div>
-                <div class="credit-desc">Testing</div>
+                <div class="credit-desc">Founder and primary vision architect of the entire game ecosystem.</div>
             </div>
 
             <div class="credit-card staff-co-owner">
@@ -632,7 +652,7 @@
                 </div>
                 <div class="credit-name">IceyBlook</div>
                 <div class="credit-role">Co-Owner</div>
-                <div class="credit-desc">Testing</div>
+                <div class="credit-desc">Direct manager of server frameworks and structural scaling operations.</div>
             </div>
             
             <div class="credit-card staff-artist">
@@ -641,7 +661,7 @@
                 </div>
                 <div class="credit-name">PizzaBlook</div>
                 <div class="credit-role">Artist</div>
-                <div class="credit-desc">Testing</div>
+                <div class="credit-desc">Creative illustrator craftsmaster behind custom block concepts and cosmetics.</div>
             </div>
 
             <div class="credit-card staff-developer">
@@ -650,7 +670,7 @@
                 </div>
                 <div class="credit-name">DevWizard</div>
                 <div class="credit-role">Developer</div>
-                <div class="credit-desc">Testing</div>
+                <div class="credit-desc">Writes the underlying algorithmic code mechanics and database sync tools.</div>
             </div>
 
             <div class="credit-card staff-tester">
@@ -659,7 +679,7 @@
                 </div>
                 <div class="credit-name">BugTester</div>
                 <div class="credit-role">Tester</div>
-                <div class="credit-desc">Testing</div>
+                <div class="credit-desc">Dedicated bug collector hunting network loop and interface anomalies.</div>
             </div>
 
             <div class="credit-card staff-admin">
@@ -668,7 +688,7 @@
                 </div>
                 <div class="credit-name">ModQueen</div>
                 <div class="credit-role">Admin</div>
-                <div class="credit-desc">Testing</div>
+                <div class="credit-desc">Enforces local community safety guidelines and coordinates social events.</div>
             </div>
 
             <div class="credit-card staff-og">
@@ -677,7 +697,7 @@
                 </div>
                 <div class="credit-name">AlphaPlayer</div>
                 <div class="credit-role">Og</div>
-                <div class="credit-desc">Testing</div>
+                <div class="credit-desc">Legacy community veteran supporting the ecosystem since early alpha builds.</div>
             </div>
         </div>
     </div>
